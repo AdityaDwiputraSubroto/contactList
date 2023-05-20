@@ -46,8 +46,8 @@ public class ContactList_Controller {
 
     public void updateContact(String idStr, String image, String name, String gender, String noTelp, String email, String address) {
         try {
-            if(idStr==null || idStr==""){
-                throw new IllegalArgumentException("Select the Row first");
+            if(idStr==null || idStr.isEmpty()){
+                throw new NullPointerException("Select the Row first");
             }
             contactModel = new ContactList_Model();
             int id = Integer.parseInt(idStr);
@@ -67,8 +67,8 @@ public class ContactList_Controller {
 
     public void deleteContact(String idStr) {
         try {
-            if(idStr==null){
-                throw new IllegalArgumentException("Select the Row first");
+            if(idStr==null || idStr.isEmpty()){
+                throw new NullPointerException("Select the Row first");
             }
             contactModel = new ContactList_Model();
             int id = Integer.parseInt(idStr);

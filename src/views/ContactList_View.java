@@ -342,12 +342,12 @@ public class ContactList_View extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 426, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -378,7 +378,7 @@ public class ContactList_View extends javax.swing.JFrame {
     }//GEN-LAST:event_emailFieldActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        System.out.println("idField : "+idField.getText()); 
+
         contactController.updateContact(idField.getText(),imageName, nameField.getText(), (String) genderCombo.getSelectedItem(), phoneField.getText(), emailField.getText(), addressArea.getText());
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -446,8 +446,9 @@ public class ContactList_View extends javax.swing.JFrame {
         emailField.setText(email);
         addressArea.setText(address);
         genderCombo.setSelectedItem(gender);
-        if(image != null || image != ""){
+        if(image != null || !image.isEmpty() || image ==""){
         sourcePath = "assets/" + image;
+        imageName = image;
         displayImage(sourcePath);
         }     
     }
