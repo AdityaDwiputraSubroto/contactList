@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import models.ContactList_Model;
 import views.ContactList_View;
+import views.login;
 
 /**
  *
@@ -23,35 +24,49 @@ import views.ContactList_View;
  */
 public class ContactList_Controller {
 
+    private int id_user;
     private ContactList_Model contactModel;
     private ContactList_View contactView;
 
-    public ContactList_Controller(ContactList_Model contactModel, ContactList_View contactView) {
+    public ContactList_Controller(ContactList_View contactView, int id_user) {
         this.contactModel = contactModel;
         this.contactView = contactView;
-        contactModel = new ContactList_Model();
+        this.id_user = id_user;
+        //this.contactModel = new ContactList_Model(id_user);
     }
 
     public void getTable() {
-        contactModel = new ContactList_Model();
+        contactModel = new ContactList_Model(id_user);
         DefaultTableModel TableModel = contactModel.getTableModel();
         contactView.setTableModel(TableModel);
     }
 
+    public void logout() {
+        contactView.dispose();
+        new login().setVisible(true);
+    }
+
     public void searchContact(String search) {
-        contactModel = new ContactList_Model();
+        contactModel = new ContactList_Model(id_user);
         DefaultTableModel TableModel = contactModel.searchContact(search);
         contactView.setTableModel(TableModel);
     }
 
-    public void updateContact(String idStr, String image, String name, String gender, String noTelp, String email, String address) {
+    public void updateContact(String idStr, String sourcePathStr, String image, String name, String gender, String noTelp, String email, String address) {
         try {
-            if(idStr==null || idStr.isEmpty()){
+            if (idStr == null || idStr.isEmpty()) {
                 throw new NullPointerException("Select the Row first");
             }
-            contactModel = new ContactList_Model();
+            if (image != null) {
+                Path sourcePath = Path.of(sourcePathStr);
+                Path destinationPath = Path.of("assets/" + image);
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                image = "";
+            }
+            contactModel = new ContactList_Model(id_user);
             int id = Integer.parseInt(idStr);
-            contactModel.updateContact(id, image, name, gender, noTelp, email, address);           
+            contactModel.updateContact(id, image, name, gender, noTelp, email, address);
             getTable();
             contactView.resetInput();
         } catch (Exception e) {
@@ -67,10 +82,10 @@ public class ContactList_Controller {
 
     public void deleteContact(String idStr) {
         try {
-            if(idStr==null || idStr.isEmpty()){
+            if (idStr == null || idStr.isEmpty()) {
                 throw new NullPointerException("Select the Row first");
             }
-            contactModel = new ContactList_Model();
+            contactModel = new ContactList_Model(id_user);
             int id = Integer.parseInt(idStr);
             contactModel.deleteContact(id);
             getTable();
@@ -90,6 +105,20 @@ public class ContactList_Controller {
             } else {
                 image = "";
             }
+//            if (image != null) {
+//                // Generate a unique name for the image file based on the current timestamp
+//                String uniqueName = System.currentTimeMillis() + "_"+image;
+//
+//                Path sourcePath = Path.of(sourcePathStr);
+//                Path destinationPath = Path.of("assets/" + uniqueName);
+//                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+//
+//                // Store the unique name in the image variable
+//                image = uniqueName;
+//            } else {
+//                image = "";
+//            }
+            contactModel = new ContactList_Model(id_user);
             System.out.println(image + name + gender + noTelp + email + address);
             contactModel.addContact(image, name, gender, noTelp, email, address);
             getTable();

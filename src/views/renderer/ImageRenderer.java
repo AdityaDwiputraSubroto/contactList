@@ -3,7 +3,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class ImageRenderer extends DefaultTableCellRenderer {
@@ -24,14 +26,23 @@ public class ImageRenderer extends DefaultTableCellRenderer {
         } else {
             System.out.println("Image file does not exist: " + imageFile.getAbsolutePath());
         }
-        
+         JLabel label = new JLabel();
         // Create the ImageIcon based on the image path
-        ImageIcon imageIcon = new ImageIcon(imagePath);
+       // ImageIcon imageIcon = new ImageIcon(imagePath);
+        try {
+             BufferedImage bufferedImage = ImageIO.read(imageFile);
+            Image image = bufferedImage;
+            ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(100, 105, Image.SCALE_SMOOTH));
+             label.setIcon(imageIcon);
+        } catch (Exception e) {
+             System.out.println("Error: " + e.getMessage());
+            ImageIcon imageIcon = new ImageIcon(imagePath);
+             label.setIcon(imageIcon);
+        }
+         
 
         // Create a JLabel to display the image
-        JLabel label = new JLabel();
-        label.setIcon(imageIcon);
-
+       
         // Set the label properties
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);

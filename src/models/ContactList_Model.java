@@ -16,14 +16,15 @@ import javax.swing.JLabel;
  * @author LENOVO
  */
 public class ContactList_Model {
-
+    private int id_user;
     private DefaultTableModel tableModel;
     Connector connector;
     Object[] column = {"ID", "Image", "Name", "Gender", "Phone Number", "Email", "Address"};
 
-    public ContactList_Model() {
-        connector = new Connector();
+    public ContactList_Model(int id_user) {
+        //connector = new Connector();
         tableModel = new DefaultTableModel();
+        this.id_user = id_user;
     }
     
       public DefaultTableModel getTableModel() {
@@ -32,13 +33,14 @@ public class ContactList_Model {
     }
     
     public DefaultTableModel searchContact(String search) {
-        String query = "SELECT id_contact, image, name, gender, phone_number, email, address  FROM contacts WHERE id_user = 1 AND name LIKE '%" + search + "%';";
+        String query = "SELECT id_contact, image, name, gender, phone_number, email, address  FROM contacts WHERE id_user = "+id_user+" AND name LIKE '%" + search + "%';";
         populateTableModel(query);
         return tableModel;
     }
 
     public void updateContact(int id, String image, String name, String gender, String noTelp, String email, String address) throws SQLException {
     try {
+         connector = new Connector();
         Connection connection = connector.getConnection();
         String query = "UPDATE contacts SET image = ?, name = ?, gender = ?, phone_number = ?, email = ?, address = ? WHERE id_contact = ?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -66,12 +68,12 @@ public class ContactList_Model {
     
     public void addContact(String image, String name, String gender, String noTelp, String email, String address) throws SQLException {
         try {
+             connector = new Connector();
             Connector connector2 = new Connector();
             Connection connection = connector2.getConnection();
             String query = "INSERT INTO contacts (name, phone_number, email, image, address, gender, id_user) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
-            int id_user = 1;
-
+            
             statement.setString(1, name);
             statement.setString(2, noTelp);
             statement.setString(3, email);
@@ -95,6 +97,7 @@ public class ContactList_Model {
 
    public void deleteContact(int id) throws SQLException {
     try {
+         connector = new Connector();
         Connection connection = connector.getConnection();
         String query = "DELETE FROM contacts WHERE id_contact = ?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -114,10 +117,11 @@ public class ContactList_Model {
     
     private void populateTableModel(){
         try {
+             connector = new Connector();
             Connection connection = connector.getConnection();
             Statement statement = connection.createStatement();
 
-            String selectQuery = "SELECT id_contact, image, name, gender, phone_number, email, address  FROM contacts WHERE id_user = 1;";
+            String selectQuery = "SELECT id_contact, image, name, gender, phone_number, email, address  FROM contacts WHERE id_user = "+id_user+";";
             ResultSet resultSet = statement.executeQuery(selectQuery);
             System.out.println("resultset : " + resultSet);
 
@@ -148,14 +152,14 @@ public class ContactList_Model {
         } catch (SQLException e) {
             System.out.println("Get data table failed!");
             e.printStackTrace();
-           
-            
+                      
         }
 
     }
 
     private void populateTableModel(String query) {
         try {
+             connector = new Connector();
             Connection connection = connector.getConnection();
             Statement statement = connection.createStatement();
 
